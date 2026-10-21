@@ -1,0 +1,167 @@
+@prefix mv:   <https://memoriavial.pe/ontologia#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+
+<https://memoriavial.pe/ontologia> a owl:Ontology ;
+    rdfs:label "Memoria Vial Segura — ontología de incidentes a nivel de calle (Los Olivos)"@es ;
+    dct:description "Ontología del prototipo TRL 4. Cada clase corresponde a una etiqueta del grafo Neo4j; cada propiedad de objeto a un tipo de relación."@es ;
+    owl:imports <http://www.w3.org/ns/prov-o>, <http://www.opengis.net/ont/geosparql> .
+
+### Clases (= etiquetas Neo4j)
+mv:Incidente a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:label "Incidente" ; rdfs:comment "Hecho delictivo ocurrido en un tramo, en fecha, hora y franja determinadas."@es .
+mv:Fuente a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:label "Fuente" ; rdfs:comment "Origen de un dato: reporte, parte o plan operativo."@es .
+mv:Reporte a owl:Class ; rdfs:subClassOf mv:Fuente ;
+    rdfs:label "Reporte" ; rdfs:comment "Relato de serenazgo/PNP (tipo: sintetico | serenazgo | parte)."@es .
+mv:Modalidad a owl:Class ; rdfs:subClassOf skos:Concept ;
+    rdfs:label "Modalidad" ; rdfs:comment "Modalidad delictiva local mapeada a un código ICCS de UNODC."@es .
+mv:Medio a owl:Class ; rdfs:subClassOf skos:Concept ;
+    rdfs:label "Medio" ; rdfs:comment "Medio usado por los autores (moto, a pie, auto...)."@es .
+mv:Tramo a owl:Class ; rdfs:subClassOf geo:Feature ;
+    rdfs:label "Tramo" ; rdfs:comment "Segmento de vía de ~100 m (≈ cuadra) con geometría WKT."@es .
+mv:PuntoInteres a owl:Class ; rdfs:subClassOf geo:Feature ;
+    rdfs:label "PuntoInteres" ; rdfs:comment "Paradero, mercado, colegio, parque o banco de OpenStreetMap."@es .
+mv:Sector a owl:Class ; rdfs:subClassOf geo:Feature ;
+    rdfs:label "Sector" ; rdfs:comment "Sector de patrullaje (ficticio en el prototipo)."@es .
+mv:Distrito a owl:Class ; rdfs:subClassOf geo:Feature ;
+    rdfs:label "Distrito" ; rdfs:comment "Distrito (ubigeo INEI)."@es .
+mv:Intervencion a owl:Class ; rdfs:subClassOf prov:Activity ;
+    rdfs:label "Intervencion" ; rdfs:comment "Acción preventiva aplicada en tramos durante un periodo."@es .
+mv:Documento a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:label "Documento" ; rdfs:comment "Publicación oficial (INEI, SIDPOL, Congreso...)."@es .
+mv:Pagina a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:label "Pagina" ; rdfs:comment "Página de un documento oficial, unidad de cita."@es .
+mv:FilaTabla a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:label "FilaTabla" ; rdfs:comment "Fila de tabla estadística extraída de una página (pieza 3)."@es .
+mv:Corrida a owl:Class ; rdfs:subClassOf prov:Activity ;
+    rdfs:label "Corrida" ; rdfs:comment "Ejecución diaria del flujo de ingesta."@es .
+mv:Incidente owl:disjointWith mv:Intervencion .
+
+### Propiedades de objeto (= tipos de relación Neo4j)
+mv:REGISTRADO_EN a owl:ObjectProperty ;
+    rdfs:label "REGISTRADO_EN" ;
+    rdfs:domain mv:Incidente ;
+    rdfs:range mv:Reporte .
+mv:TIPO a owl:ObjectProperty ;
+    rdfs:label "TIPO" ;
+    rdfs:domain mv:Incidente ;
+    rdfs:range mv:Modalidad .
+mv:USA a owl:ObjectProperty ;
+    rdfs:label "USA" ;
+    rdfs:domain mv:Incidente ;
+    rdfs:range mv:Medio .
+mv:OCURRE_EN a owl:ObjectProperty ;
+    rdfs:label "OCURRE_EN" ;
+    rdfs:domain mv:Incidente ;
+    rdfs:range mv:Tramo .
+mv:CERCA_DE a owl:ObjectProperty ;
+    rdfs:label "CERCA_DE" ;
+    rdfs:domain mv:Tramo ;
+    rdfs:range mv:PuntoInteres .
+mv:CUBIERTO_POR a owl:ObjectProperty ;
+    rdfs:label "CUBIERTO_POR" ;
+    rdfs:domain mv:Tramo ;
+    rdfs:range mv:Sector .
+mv:APLICADA_EN a owl:ObjectProperty ;
+    rdfs:label "APLICADA_EN" ;
+    rdfs:domain mv:Intervencion ;
+    rdfs:range mv:Tramo .
+mv:DERIVADO_DE a owl:ObjectProperty ;
+    rdfs:label "DERIVADO_DE" ;
+    rdfs:range mv:Fuente ;
+    rdfs:subPropertyOf prov:wasDerivedFrom .
+mv:TIENE_PAGINA a owl:ObjectProperty ;
+    rdfs:label "TIENE_PAGINA" ;
+    rdfs:domain mv:Documento ;
+    rdfs:range mv:Pagina ;
+    rdfs:subPropertyOf dct:hasPart .
+mv:EXTRAIDA_DE a owl:ObjectProperty ;
+    rdfs:label "EXTRAIDA_DE" ;
+    rdfs:domain mv:FilaTabla ;
+    rdfs:range mv:Pagina ;
+    rdfs:subPropertyOf prov:wasDerivedFrom .
+mv:CONTIENE a owl:ObjectProperty ;
+    rdfs:label "CONTIENE" ;
+    rdfs:domain mv:Distrito ;
+    rdfs:range mv:Sector ;
+    rdfs:subPropertyOf geo:sfContains .
+mv:geom_wkt a owl:DatatypeProperty ; rdfs:subPropertyOf geo:asWKT ; rdfs:range geo:wktLiteral .
+
+### Propiedades de datos
+mv:id a owl:DatatypeProperty ; rdfs:range xsd:string .
+mv:fecha a owl:DatatypeProperty ; rdfs:domain mv:Incidente ; rdfs:range xsd:date .
+mv:hora a owl:DatatypeProperty ; rdfs:domain mv:Incidente ; rdfs:range xsd:string .
+mv:franja a owl:DatatypeProperty ; rdfs:domain mv:Incidente ; rdfs:range xsd:string .
+mv:dia_semana a owl:DatatypeProperty ; rdfs:domain mv:Incidente ; rdfs:range xsd:string .
+mv:descripcion_resumen a owl:DatatypeProperty ; rdfs:domain mv:Incidente ; rdfs:range xsd:string .
+mv:tipo a owl:DatatypeProperty ; rdfs:range xsd:string .
+mv:fecha_ingreso a owl:DatatypeProperty ; rdfs:domain mv:Reporte ; rdfs:range xsd:date .
+mv:texto a owl:DatatypeProperty ; rdfs:range xsd:string .
+mv:codigo_iccs a owl:DatatypeProperty ; rdfs:domain mv:Modalidad ; rdfs:range xsd:string .
+mv:nombre a owl:DatatypeProperty ; rdfs:range xsd:string .
+mv:via a owl:DatatypeProperty ; rdfs:domain mv:Tramo ; rdfs:range xsd:string .
+mv:cuadra a owl:DatatypeProperty ; rdfs:domain mv:Tramo ; rdfs:range xsd:integer .
+mv:distancia_m a owl:DatatypeProperty ; rdfs:range xsd:decimal .
+mv:osm_id a owl:DatatypeProperty ; rdfs:domain mv:PuntoInteres ; rdfs:range xsd:string .
+mv:fecha_inicio a owl:DatatypeProperty ; rdfs:domain mv:Intervencion ; rdfs:range xsd:date .
+mv:fecha_fin a owl:DatatypeProperty ; rdfs:domain mv:Intervencion ; rdfs:range xsd:date .
+mv:doc_id a owl:DatatypeProperty ; rdfs:domain mv:Documento ; rdfs:range xsd:string .
+mv:url a owl:DatatypeProperty ; rdfs:domain mv:Documento ; rdfs:range xsd:anyURI .
+mv:pagina a owl:DatatypeProperty ; rdfs:domain mv:Pagina ; rdfs:range xsd:integer .
+mv:ubigeo a owl:DatatypeProperty ; rdfs:domain mv:Distrito ; rdfs:range xsd:string .
+
+### Esquema de modalidades (SKOS) con mapeo a ICCS — ver mapeo_iccs.csv
+mv:EsquemaModalidades a skos:ConceptScheme ; rdfs:label "Modalidades delictivas de calle"@es .
+mv:mod_robo_celular a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Robo de celular"@es ; mv:codigo_iccs "04011" ;
+    skos:closeMatch <https://www.unodc.org/iccs/04011> ; rdfs:comment "ICCS: Robo a la persona"@es .
+mv:mod_arrebato_cartera a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Arrebato de cartera o bolso"@es ; mv:codigo_iccs "04011" ;
+    skos:closeMatch <https://www.unodc.org/iccs/04011> ; rdfs:comment "ICCS: Robo a la persona"@es .
+mv:mod_cogoteo a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Cogoteo (robo con sujeción del cuello)"@es ; mv:codigo_iccs "04011" ;
+    skos:closeMatch <https://www.unodc.org/iccs/04011> ; rdfs:comment "ICCS: Robo a la persona"@es .
+mv:mod_tentativa_robo a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Tentativa de robo"@es ; mv:codigo_iccs "04011" ;
+    skos:closeMatch <https://www.unodc.org/iccs/04011> ; rdfs:comment "ICCS: Robo a la persona (tentativa)"@es .
+mv:mod_robo_vehiculo a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Robo de vehículo"@es ; mv:codigo_iccs "04019" ;
+    skos:closeMatch <https://www.unodc.org/iccs/04019> ; rdfs:comment "ICCS: Otros robos"@es .
+mv:mod_hurto_autopartes a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Hurto de autopartes"@es ; mv:codigo_iccs "05021" ;
+    skos:closeMatch <https://www.unodc.org/iccs/05021> ; rdfs:comment "ICCS: Hurto de vehículo motorizado o sus partes"@es .
+mv:mod_robo_negocio a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Robo a establecimiento comercial"@es ; mv:codigo_iccs "04013" ;
+    skos:closeMatch <https://www.unodc.org/iccs/04013> ; rdfs:comment "ICCS: Robo a establecimiento o institución"@es .
+mv:mod_extorsion a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Extorsión"@es ; mv:codigo_iccs "02041" ;
+    skos:closeMatch <https://www.unodc.org/iccs/02041> ; rdfs:comment "ICCS: Extorsión o chantaje"@es .
+mv:mod_amenazas a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Amenazas e intimidación"@es ; mv:codigo_iccs "0208" ;
+    skos:closeMatch <https://www.unodc.org/iccs/0208> ; rdfs:comment "ICCS: Actos destinados a inducir miedo o angustia"@es .
+mv:mod_acoso_sexual a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Acoso sexual en espacio público"@es ; mv:codigo_iccs "0302" ;
+    skos:closeMatch <https://www.unodc.org/iccs/0302> ; rdfs:comment "ICCS: Agresión sexual (no física)"@es .
+mv:mod_estafa_paso a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Estafa al paso («cuento»)"@es ; mv:codigo_iccs "0701" ;
+    skos:closeMatch <https://www.unodc.org/iccs/0701> ; rdfs:comment "ICCS: Fraude"@es .
+mv:mod_bujiazo a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Bujiazo (rotura de luna para robar del vehículo)"@es ; mv:codigo_iccs "05029" ;
+    skos:closeMatch <https://www.unodc.org/iccs/05029> ; rdfs:comment "ICCS: Otros hurtos"@es .
+mv:mod_marcaje a mv:Modalidad ; skos:inScheme mv:EsquemaModalidades ;
+    skos:prefLabel "Marcaje (robo tras retiro bancario)"@es ; mv:codigo_iccs "04011" ;
+    skos:closeMatch <https://www.unodc.org/iccs/04011> ; rdfs:comment "ICCS: Robo a la persona"@es .
+
+### Medios
+mv:medio_moto a mv:Medio ; skos:prefLabel "moto"@es .
+mv:medio_a_pie a mv:Medio ; skos:prefLabel "a pie"@es .
+mv:medio_auto a mv:Medio ; skos:prefLabel "auto"@es .
+mv:medio_mototaxi a mv:Medio ; skos:prefLabel "mototaxi"@es .
+mv:medio_bicicleta a mv:Medio ; skos:prefLabel "bicicleta"@es .

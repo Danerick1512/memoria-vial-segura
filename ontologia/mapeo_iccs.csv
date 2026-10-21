@@ -1,0 +1,14 @@
+modalidad_id,modalidad,codigo_iccs,etiqueta_iccs,nota
+robo_celular,Robo de celular,04011,Robo a la persona,
+arrebato_cartera,Arrebato de cartera o bolso,04011,Robo a la persona,
+cogoteo,Cogoteo (robo con sujeción del cuello),04011,Robo a la persona,
+tentativa_robo,Tentativa de robo,04011,Robo a la persona,ICCS registra la tentativa como atributo
+robo_vehiculo,Robo de vehículo,04019,Otros robos,
+hurto_autopartes,Hurto de autopartes,05021,Hurto de vehículo motorizado o sus partes,
+robo_negocio,Robo a establecimiento comercial,04013,Robo a establecimiento o institución,
+extorsion,Extorsión,02041,Extorsión o chantaje,
+amenazas,Amenazas e intimidación,0208,Actos destinados a inducir miedo o angustia,
+acoso_sexual,Acoso sexual en espacio público,0302,Agresión sexual,no física
+estafa_paso,Estafa al paso («cuento»),0701,Fraude,
+bujiazo,Bujiazo (rotura de luna para robar del vehículo),05029,Otros hurtos,modalidad emergente (patrón P3)
+marcaje,Marcaje (robo tras retiro bancario),04011,Robo a la persona,modalidad emergente (patrón P3)

@@ -1,0 +1,51 @@
+[
+  {
+    "id": "S1",
+    "nombre": "Sector 1 — Avenida Panamericana Norte",
+    "lat": -11.930432,
+    "lon": -77.075976,
+    "n_tramos": 371
+  },
+  {
+    "id": "S2",
+    "nombre": "Sector 2 — Avenida Canta Callao",
+    "lat": -11.947058,
+    "lon": -77.078026,
+    "n_tramos": 464
+  },
+  {
+    "id": "S3",
+    "nombre": "Sector 3 — Avenida Central",
+    "lat": -11.960455,
+    "lon": -77.076726,
+    "n_tramos": 524
+  },
+  {
+    "id": "S4",
+    "nombre": "Sector 4 — Avenida Alfredo Mendiola",
+    "lat": -11.971786,
+    "lon": -77.068268,
+    "n_tramos": 388
+  },
+  {
+    "id": "S5",
+    "nombre": "Sector 5 — Avenida Los Próceres de Huandoy",
+    "lat": -11.97628,
+    "lon": -77.079332,
+    "n_tramos": 427
+  },
+  {
+    "id": "S6",
+    "nombre": "Sector 6 — Avenida Carlos Alberto Izaguirre",
+    "lat": -11.991157,
+    "lon": -77.073762,
+    "n_tramos": 632
+  },
+  {
+    "id": "S7",
+    "nombre": "Sector 7 — Avenida Angélica Gamarra",
+    "lat": -12.005904,
+    "lon": -77.072335,
+    "n_tramos": 540
+  }
+]

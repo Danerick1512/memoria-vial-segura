@@ -1,0 +1,25 @@
+# Memoria Vial Segura — dependencias (wheels precompilados en Windows y Linux)
+# torch en versión CPU: la de CUDA pesa varios GB y no cabe en Streamlit Community Cloud
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.3
+neo4j>=5.20
+anthropic>=0.40
+python-dotenv>=1.0
+pydantic>=2.6
+requests>=2.31
+pandas>=2.1
+numpy>=1.26
+shapely>=2.0
+pyproj>=3.6
+scikit-learn>=1.4
+sentence-transformers>=3.0
+spacy>=3.8,<3.9
+es_core_news_sm @ https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.8.0/es_core_news_sm-3.8.0-py3-none-any.whl
+streamlit>=1.35
+streamlit-folium>=0.20
+folium>=0.16
+plotly>=5.20
+pyyaml>=6.0
+markdown>=3.5
+pytest>=8.0
+rdflib>=7.0

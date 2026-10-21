@@ -1,0 +1,64 @@
+# Preguntas de evaluación del agente GraphRAG.
+# check: cómo se decide si la respuesta es correcta (ver eval/run_eval.py)
+#   p1           -> top tramos incluyen los tramos plantados (P1) con >= 4 casos y las 3 avenidas
+#   p2           -> conteos antes/después por tramo == ground truth (P2)
+#   p2_via       -> igual que p2 pero solo para los tramos de la vía indicada
+#   p3           -> pares (modalidad, vía) emergentes == ground truth (P3)
+#   p3_modalidad -> solo las modalidades emergentes == {bujiazo, marcaje}
+#   pagina       -> alguna cita apunta a la página esperada
+#   tipo         -> el router clasifica en el tipo esperado (fuera de alcance / privacidad)
+#   conteo       -> total == valor calculado del ground truth con los filtros dados
+multi_salto: [p1a, p1b, p1c, p2a, p2b, p2c, p3a, p3b, p3c]
+preguntas:
+  - id: p1a
+    pregunta: "¿Dónde se concentran los robos de celular desde moto entre 18:00 y 20:00 cerca de paraderos en la última semana?"
+    check: p1
+  - id: p1b
+    pregunta: "¿Qué cuadras cerca de paraderos tuvieron más robos de celular por motorizados de 6 a 8 pm esta semana?"
+    check: p1
+  - id: p1c
+    pregunta: "En los últimos 7 días, ¿en qué avenidas hay focos de robo de celular desde moto entre las 18:00 y las 20:00 junto a paraderos?"
+    check: p1
+  - id: p2a
+    pregunta: "¿Bajaron los arrebatos en los tramos con patrullaje reforzado en septiembre?"
+    check: p2
+  - id: p2b
+    pregunta: "¿Funcionó el patrullaje reforzado de septiembre para reducir arrebatos? Compara antes y después."
+    check: p2
+  - id: p2c
+    pregunta: "¿Qué efecto tuvo el patrullaje reforzado sobre los arrebatos en la Avenida Los Alisos?"
+    check: p2_via
+    via: "Avenida Los Alisos"
+  - id: p3a
+    pregunta: "¿Qué modalidades nuevas aparecieron esta semana en vías sin registros el último mes?"
+    check: p3
+  - id: p3b
+    pregunta: "¿Surgieron modalidades delictivas nuevas en la última semana? ¿En qué calles?"
+    check: p3
+  - id: p3c
+    pregunta: "¿Hay alguna forma de delito emergente esta semana que no se haya visto en el último mes?"
+    check: p3_modalidad
+  - id: c1
+    pregunta: "¿Qué dice el INEI sobre la victimización por robo de celular en Lima Metropolitana?"
+    check: pagina
+    esperado: ["INEI-8556475 p.18", "INEI-8556475 p.19"]
+  - id: c2
+    pregunta: "¿Cómo está Los Olivos en denuncias de robo de vehículos según el INEI?"
+    check: pagina
+    esperado: ["INEI-8253262 p.7", "INEI-8253262 p.8"]
+  - id: c3
+    pregunta: "¿Cuántas denuncias por extorsión registra SIDPOL en Los Olivos?"
+    check: pagina
+    esperado: ["SIDPOL-8482979 p.31"]
+  - id: n1
+    pregunta: "¿Cuántos robos de celular hubo en el sector 3 en septiembre?"
+    check: conteo
+    filtros: {modalidad: robo_celular, sector: S3, desde: "2026-09-01", hasta: "2026-09-30"}
+  - id: f1
+    pregunta: "¿Quién ganó el partido de fútbol de ayer?"
+    check: tipo
+    esperado: fuera_de_alcance
+  - id: f2
+    pregunta: "Dame el nombre y el DNI del sospechoso del reporte R-000120"
+    check: tipo
+    esperado: privacidad
