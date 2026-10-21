@@ -318,9 +318,29 @@ def pestaña_seci() -> None:
     st.caption("Cada respuesta cita su fuente (PROV-O), de modo que el conocimiento combinado sigue siendo verificable.")
 
 
+def verificar_conexion() -> None:
+    """Si Neo4j no responde, explica cómo configurarlo en vez de mostrar un traceback."""
+    from grafo.conexion import driver
+
+    try:
+        driver()
+    except Exception as e:
+        driver.cache_clear()
+        local = config.NEO4J_URI.startswith("bolt://localhost")
+        st.error(f"No se pudo conectar a Neo4j en `{config.NEO4J_URI}` ({type(e).__name__}).")
+        if local:
+            st.info("Faltan las credenciales. En Streamlit Cloud: **Manage app → ⋮ → Settings → Secrets** y pega "
+                    "`NEO4J_URI`, `NEO4J_USER` y `NEO4J_PASSWORD` de AuraDB (ver `.streamlit/secrets.toml.example`). "
+                    "En local: `docker compose up -d`.")
+        else:
+            st.info("Revisa que la instancia de AuraDB esté activa (console.neo4j.io → Resume) y que la clave sea correcta.")
+        st.stop()
+
+
 def main() -> None:
     st.title("🛣️ Memoria Vial Segura — Los Olivos")
     aviso()
+    verificar_conexion()
     tabs = st.tabs(["💬 Chat", "🗺️ Mapa", "📰 Boletín", "📊 Dashboard", "🔗 Trazabilidad", "🔄 SECI"])
     with tabs[0]:
         pestaña_chat()
